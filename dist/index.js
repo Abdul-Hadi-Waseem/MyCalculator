@@ -1,103 +1,78 @@
 #! /usr/bin/env node
-//sheban path to tell that our project will run in node environment
-import inquirer from "inquirer";
 import chalk from "chalk";
 import chalkAnimation from "chalk-animation";
-// let restrictRainbow=()=>{
-//  return new Promise((resolve)=>{
-//     setTimeout(resolve,5000)
-//  })
-// }
-startCalculator();
+import inquirer from "inquirer";
 async function startCalculator() {
-    let rainbowStart = chalkAnimation.neon(`_____________________
-|  _________________  |
-| |                 | |
-| |_________________| |
-|  ___ ___ ___   ___  |
-| | 7 | 8 | 9 | | + | |
-| |___|___|___| |___| |
-| | 4 | 5 | 6 | | - | |
-| |___|___|___| |___| |
-| | 1 | 2 | 3 | | x | |
-| |___|___|___| |___| |
-| | . | 0 | = | | / | |
-| |___|___|___| |___| |
-|_____________________|
-
-\n\n\n\n`);
-    // await restrictRainbow();
-    // rainbowStart.stop();
-    // console.log
-    // (`\n\n\n
-    //  _____________________
-    // |  _________________  |
-    // | |                 | |
-    // | |_________________| |
-    // |  ___ ___ ___   ___  |
-    // | | 7 | 8 | 9 | | + | |
-    // | |___|___|___| |___| |
-    // | | 4 | 5 | 6 | | - | |
-    // | |___|___|___| |___| |
-    // | | 1 | 2 | 3 | | x | |
-    // | |___|___|___| |___| |
-    // | | . | 0 | = | | / | |
-    // | |___|___|___| |___| |
-    // |_____________________|\n\n\n\n\n\n\n\n\n\n`)
-    let stopAnim = await setTimeout(() => {
-        rainbowStart.stop();
-    }, 2000);
+    let title = chalkAnimation.rainbow("---LET'S DO SOME MATHS ;)---");
+    await stopAnimation();
+    title.stop();
+    console.log(chalk.rgb(0, 255, 127)(`
+     _____________________
+    |  _________________  |
+    | |                 | |
+    | |_________________| |
+    |  ___ ___ ___   ___  |
+    | | 7 | 8 | 9 | | + | |
+    | |___|___|___| |___| |
+    | | 4 | 5 | 6 | | - | |
+    | |___|___|___| |___| |
+    | | 1 | 2 | 3 | | x | |
+    | |___|___|___| |___| |
+    | | . | 0 | = | | / | |
+    | |___|___|___| |___| |
+    |_____________________|`));
+    console.log(chalk.rgb(155, 89, 182)(`CREATED BY ABDUL HADI WASEEM!!!`));
+}
+await startCalculator();
+function stopAnimation() {
+    return new Promise((resolve) => {
+        setTimeout(resolve, 2000);
+    });
 }
 async function askUser() {
-    const myObj = await inquirer.prompt([
+    await inquirer.prompt([
         {
             type: "list",
+            message: "Select An Option!",
             name: "displayChoices",
-            message: "Select Your Choice!",
             choices: ["Addition", "Subtraction", "Multiplication", "Division", "Exponent"]
-        },
-        {
+        }, {
             type: "input",
+            message: "Enter Number 1: ",
             name: "num1",
-            message: "Enter First Number: "
-        },
-        {
+        }, {
             type: "input",
+            message: "Enter Number 2: ",
             name: "num2",
-            message: "Enter Second Number: "
         }
-    ]);
-    return myObj;
+    ])
+        .then((choice) => {
+        if (choice.displayChoices == "Addition") {
+            console.log(chalk.redBright(`\n${choice.displayChoices}: ${choice.num1} + ${choice.num2} = ${(+choice.num1) + (+choice.num2)}\n`));
+        }
+        else if (choice.displayChoices == "Subtraction") {
+            console.log(chalk.redBright(`\n${choice.displayChoices}: ${choice.num1} - ${choice.num2} = ${(+choice.num1) - (+choice.num2)}\n`));
+        }
+        else if (choice.displayChoices == "Multiplication") {
+            console.log(chalk.redBright(`\n${choice.displayChoices}: ${choice.num1} * ${choice.num2} = ${(+choice.num1) * (+choice.num2)}\n`));
+        }
+        else if (choice.displayChoices == "Division") {
+            console.log(chalk.redBright(`\n${choice.displayChoices}: ${choice.num1} % ${choice.num2} = ${(+choice.num1) / (+choice.num2)}\n`));
+        }
+        else if (choice.displayChoices == "Exponent") {
+            console.log(chalk.redBright(`\n${choice.displayChoices}: ${choice.num1} ^ ${choice.num2} = ${(+choice.num1) ** (+choice.num2)}\n`));
+        }
+    });
 }
-async function userChoice() {
-    const choice = await askUser();
-    if (choice.displayChoices == "Addition") {
-        console.log(`${choice.displayChoices}: ${choice.num1} + ${choice.num2} = ${(+choice.num1) + (+choice.num2)}`);
-    }
-    else if (choice.displayChoices == "Subtraction") {
-        console.log(`${choice.displayChoices}: ${choice.num1} - ${choice.num2} = ${(+choice.num1) - (+choice.num2)}`);
-    }
-    else if (choice.displayChoices == "Multiplication") {
-        console.log(`${choice.displayChoices}: ${choice.num1} * ${choice.num2} = ${(+choice.num1) * (+choice.num2)}`);
-    }
-    else if (choice.displayChoices == "Division") {
-        console.log(`${choice.displayChoices}: ${choice.num1} % ${choice.num2} = ${(+choice.num1) / (+choice.num2)}`);
-    }
-    else if (choice.displayChoices == "Exponent") {
-        console.log(chalk.redBright(`${choice.displayChoices}: ${choice.num1} ^ ${choice.num2} = ${(+choice.num1) ** (+choice.num2)}`));
-    }
-    return choice;
-}
-async function callCalculator() {
+async function runAgain() {
+    let optionSelected;
     do {
-        const obj = await userChoice();
-        var optionSelected = await inquirer.prompt([
-            {
-                type: "input",
+        await askUser();
+        optionSelected = await inquirer.prompt([{
+                message: "Do You Want To Run Again?\nHit Enter To Exit!",
                 name: "opt",
-                message: "Run Again? \nPress 'Y' To Run Again \nHit Enter To Exit"
-            }
-        ]);
+                type: "input"
+            }]);
     } while (optionSelected.opt == "y" || optionSelected.opt == "Y" || optionSelected.opt == "yes" || optionSelected.opt == "Yes");
 }
-callCalculator();
+await runAgain();
